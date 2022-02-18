@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { getRockets } from "./api/rockets";
-
-interface Rocket {
-    name: string,
-    id: string,
-    flickr_images: string[]
-}
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { getRockets, selectRockets } from "./redux/rocket/rocketSlice";
 
 export function Rockets() {
-    const [rockets, setRockets] = useState<Rocket[]>([])
+    const dispatch = useAppDispatch();
+    const rockets = useAppSelector(selectRockets);
+
     useEffect(() => {
-        const getRocketsFn = async () => {
-            const rockets = await getRockets()
-            setRockets(rockets)
-        }
-        getRocketsFn()
-    }, [])
+        dispatch(getRockets());
+    }, [dispatch]);
+
     console.log(rockets)
     return (
         <>

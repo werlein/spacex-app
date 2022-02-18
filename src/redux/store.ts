@@ -1,11 +1,18 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
 import rocketReducer from "./rocket/rocketSlice"
+import rootSaga from "./app/app.sagas";
+
+const sagaMiddleware = createSagaMiddleware()
 
 export const store = configureStore({
-    reducer: {
-        rocket: rocketReducer
-    }
+  reducer: {
+    rocket: rocketReducer
+  },
+  middleware: (getDefaultMiddleware) => [...getDefaultMiddleware(), sagaMiddleware]
 })
+
+sagaMiddleware.run(rootSaga)
 
 export type AppDispatch = typeof store.dispatch;
 
