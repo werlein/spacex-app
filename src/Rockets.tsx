@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { getRockets, selectRockets } from "./redux/rocket/rocketSlice";
+import { rocketActions } from "./redux/rocket/rocket.actions";
+import { selectRockets } from "./redux/rocket/rocket.reducer";
 
 export function Rockets() {
     const dispatch = useAppDispatch();
     const rockets = useAppSelector(selectRockets);
 
     useEffect(() => {
-        dispatch(getRockets());
+        dispatch(rocketActions.getRockets());
     }, [dispatch]);
 
     console.log(rockets)

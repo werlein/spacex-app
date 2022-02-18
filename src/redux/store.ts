@@ -1,6 +1,6 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import rocketReducer from "./rocket/rocketSlice"
+import rocketReducer from "./rocket/rocket.reducer"
 import rootSaga from "./app/app.sagas";
 
 const sagaMiddleware = createSagaMiddleware()
