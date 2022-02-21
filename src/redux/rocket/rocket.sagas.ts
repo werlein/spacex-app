@@ -3,8 +3,7 @@ import * as api from '../../api/rockets'
 import { rocketActions } from './rocket.actions'
 import { Rocket } from './rocket.reducer'
 
-
-export function* getRocketsSaga() {
+export function* getRocketsSaga(action: ReturnType<typeof rocketActions.getRockets>) {
     const rockets: Rocket[] = yield call(api.getRockets)
     yield put(rocketActions.getRocketsSuccess(rockets))
 }

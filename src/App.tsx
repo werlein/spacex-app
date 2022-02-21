@@ -1,13 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { Rockets } from './Rockets';
 
 function App() {
   return (
-    <div className="App">
+    <div data-testid="app" className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <Rockets />
       </header>
     </div>
