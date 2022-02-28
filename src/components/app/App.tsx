@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Rockets } from './Rockets';
+import { Rockets } from '../rockets/Rockets';
 
 function App() {
   return (

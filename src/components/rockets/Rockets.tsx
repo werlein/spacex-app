@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./redux/hooks";
-import { rocketActions } from "./redux/rocket/rocket.actions";
-import { selectRockets } from "./redux/rocket/rocket.reducer";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { rocketActions } from "../../redux/rocket/rocket.actions";
+import { selectRockets } from "../../redux/rocket/rocket.reducer";
+import { Carousel } from "../carousel/Carousel";
 
 export function Rockets() {
     const dispatch = useAppDispatch();
@@ -11,13 +12,12 @@ export function Rockets() {
         dispatch(rocketActions.getRockets());
     }, [dispatch]);
 
-    console.log(rockets)
     return (
         <>
             {rockets.map((rocket) => (
                 <div key={rocket.id} style={{ marginBottom: "20px" }}>
                     <div>{rocket.name}</div>
-                    {rocket.flickr_images.map((imageUrl) => <img key={imageUrl} src={imageUrl} alt="" />)}
+                    <Carousel imageURLs={rocket.flickr_images} />
                 </div>
             ))}
         </>
