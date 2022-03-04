@@ -15,7 +15,7 @@ export function Rockets() {
     return (
         <>
             {rockets.map((rocket) => (
-                <div key={rocket.id} style={{ marginBottom: "20px" }}>
+                <div key={rocket.id} style={{ marginBottom: "50px" }}>
                     <div>{rocket.name}</div>
                     <Carousel imageURLs={rocket.flickr_images} />
                 </div>
