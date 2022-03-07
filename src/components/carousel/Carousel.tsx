@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components'
 
 interface Props {
@@ -14,22 +14,39 @@ const height = 400;
 
 export function Carousel(props: Props) {
     const [activeImageIndex, setActiveImageIndex] = useState(0)
-
+    
     const handleClickArrow = (direction: ArrowDirection) => {
         setActiveImageIndex((value) => {
-            return direction === ArrowDirection.Left ? --value : ++value
+            let newValue = direction === ArrowDirection.Left ? --value : ++value
+            if (newValue < 0) {
+                newValue = props.imageURLs.length - 1
+            }
+            else if (newValue >= props.imageURLs.length) {
+                newValue = 0
+            }
+            
+            return newValue
         })
     }
+    
+    useEffect(() => {
+        const imageTimer = setInterval(() => {
+            handleClickArrow(ArrowDirection.Right)
+        }, 3000);
+        return () => {
+            clearInterval(imageTimer);
+        }
+    }, [])
 
     return (
         <CarouselContainer>
-            <div><Arrow direction={ArrowDirection.Left} onClick={() => handleClickArrow(ArrowDirection.Left)} className={activeImageIndex === 0 ? 'disabled' : ''} /></div>
+            <div><Arrow direction={ArrowDirection.Left} onClick={() => handleClickArrow(ArrowDirection.Left)} /></div>
             <ActiveImageContainer>
                 <ImagesContainer activeImageIndex={activeImageIndex}>
-                    {props.imageURLs.map((imageUrl, index) => <Image left={index * 500} key={imageUrl} src={imageUrl} alt="" />)}
+                    {props.imageURLs.map((imageUrl) => <Image key={imageUrl} src={imageUrl} alt="" />)}
                 </ImagesContainer>
             </ActiveImageContainer>
-            <div><Arrow direction={ArrowDirection.Right} onClick={() => handleClickArrow(ArrowDirection.Right)} className={activeImageIndex === props.imageURLs.length-1 ? 'disabled' : ''} /></div>
+            <div><Arrow direction={ArrowDirection.Right} onClick={() => handleClickArrow(ArrowDirection.Right)} /></div>
         </CarouselContainer>
     )
 }
@@ -55,11 +72,9 @@ const ImagesContainer = styled.div<{ activeImageIndex: number }>`
     transition: left 1s ease 0s;
 `
 
-const Image = styled.img<{ left: number }>`
-    position: absolute;
+const Image = styled.img`
     max-width: ${width}px;
     max-height: ${height}px;
-    left: ${props => props.left}px;
 `
 
 const Arrow = styled.i<{ direction: ArrowDirection }>`
