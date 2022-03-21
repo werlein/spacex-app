@@ -8,8 +8,12 @@ export function* getRocketsSaga(action: ReturnType<typeof rocketActions.getRocke
     yield put(rocketActions.getRocketsSuccess(rockets))
 }
 
-export function* getRocketByIdSaga() {}
+export function* getRocketSaga(action: ReturnType<typeof rocketActions.getRocket>) {
+    const rocket: Rocket = yield call(api.getRocketById, action.payload)
+    yield put(rocketActions.getRocketSuccess(rocket))
+}
 
 export default function* watcher() {
     yield takeEvery(rocketActions.getRockets, getRocketsSaga)
+    yield takeEvery(rocketActions.getRocket, getRocketSaga)
 }

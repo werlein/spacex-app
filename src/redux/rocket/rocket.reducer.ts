@@ -8,10 +8,12 @@ export interface Rocket {
 }
 
 export interface RocketState {
+    rocket: Rocket | undefined,
     rockets: Rocket[]
 }
 
 const initialState: RocketState = {
+    rocket: undefined,
     rockets: []
 }
 
@@ -21,10 +23,14 @@ export const rocketSlice = createSlice({
     reducers: {
         getRocketsSuccess: (state, action: PayloadAction<Rocket[]>) => {
             state.rockets = action.payload
+        },
+        getRocketSuccess: (state, action: PayloadAction<Rocket>) => {
+            state.rocket = action.payload
         }
     }
 })
 
 export const selectRockets = (state: RootState) => state.rocket.rockets;  
+export const selectRocket = (state: RootState) => state.rocket.rocket;  
 
 export default rocketSlice.reducer;

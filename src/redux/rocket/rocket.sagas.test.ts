@@ -2,9 +2,9 @@ import { testSaga } from 'redux-saga-test-plan';
 import * as api from '../../api/rockets'
 import { rocketActions } from './rocket.actions';
 import { Rocket } from './rocket.reducer';
-import { getRocketsSaga } from './rocket.sagas';
+import { getRocketSaga, getRocketsSaga } from './rocket.sagas';
 
-test('exact order with redux-saga-test-plan', () => {
+test('getRocketsSaga', () => {
     const rocket: Rocket[] = []
     const action = rocketActions.getRockets()
     testSaga(getRocketsSaga, action)
@@ -12,3 +12,16 @@ test('exact order with redux-saga-test-plan', () => {
         .next(rocket).put(rocketActions.getRocketsSuccess(rocket))
         .next().isDone()
 });
+
+test('getRocketSaga', () => {
+    const rocket: Rocket = {
+        id: "dummyId",
+        name: "dummy name",
+        flickr_images: []
+    }
+    const action = rocketActions.getRocket(rocket.id)
+    testSaga(getRocketSaga, action)
+        .next().call(api.getRocketById, rocket.id)
+        .next(rocket).put(rocketActions.getRocketSuccess(rocket))
+        .next().isDone()
+})

@@ -3,5 +3,10 @@ import { rocketSlice } from "./rocket.reducer";
 
 export const rocketActions = {
     ...rocketSlice.actions,
-    getRockets: createAction("Rocket/getRockets")
+    getRockets: createAction("Rocket/getRockets"),
+    getRocket: createAction("Rocket/getRocket", (id: string) => {
+        return {
+            payload: id
+        }
+    })
 }
