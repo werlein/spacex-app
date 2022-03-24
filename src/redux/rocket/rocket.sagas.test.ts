@@ -15,6 +15,7 @@ test('getRocketsSaga', () => {
 
 test('getRocketSaga', () => {
     const rocket: Rocket = {
+        active: true,
         id: "dummyId",
         name: "dummy name",
         flickr_images: []
