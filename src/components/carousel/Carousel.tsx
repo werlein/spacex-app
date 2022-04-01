@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components'
 
 interface Props {
@@ -15,7 +15,7 @@ const height = 400;
 export function Carousel(props: Props) {
     const [activeImageIndex, setActiveImageIndex] = useState(0)
     
-    const handleClickArrow = (direction: ArrowDirection) => {
+    const handleClickArrow = useCallback((direction: ArrowDirection) => {
         setActiveImageIndex((value) => {
             let newValue = direction === ArrowDirection.Left ? --value : ++value
             if (newValue < 0) {
@@ -27,7 +27,7 @@ export function Carousel(props: Props) {
             
             return newValue
         })
-    }
+    }, [props.imageURLs.length])
     
     useEffect(() => {
         const imageTimer = setInterval(() => {
@@ -36,7 +36,7 @@ export function Carousel(props: Props) {
         return () => {
             clearInterval(imageTimer);
         }
-    }, [])
+    }, [handleClickArrow])
 
     return (
         <CarouselContainer>

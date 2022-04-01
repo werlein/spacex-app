@@ -8,6 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import Typography from '@mui/material/Typography';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 import Dialog from '@mui/material/Dialog';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -20,6 +22,7 @@ export function Rockets() {
     const dispatch = useAppDispatch();
     const rockets = useAppSelector(selectRockets);
     const [dialogImageUrl, setDialogImageUrl] = useState("");
+    const [favouriteIds, setFavouriteIds] = useState<string[]>([]);
 
     useEffect(() => {
         dispatch(rocketActions.getRockets());
@@ -33,6 +36,16 @@ export function Rockets() {
         setDialogImageUrl("");
     }
 
+    const handleClickToggleFavourite = (rocketId: string) => {
+        const isFavourite = favouriteIds.includes(rocketId)
+
+        setFavouriteIds(() => {
+            return isFavourite ? favouriteIds.filter((id) => {
+                return id !== rocketId
+            }) : [...favouriteIds, rocketId]
+        })
+    }
+
     return (
         <>
             <Typography variant="h2">
@@ -42,6 +55,7 @@ export function Rockets() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
+                            <TableCell></TableCell>
                             <TableCell>Name</TableCell>
                             <TableCell></TableCell>
                             <TableCell>Active</TableCell>
@@ -52,19 +66,27 @@ export function Rockets() {
                         {rockets.map((rocket) => (
                             <TableRow
                                 key={rocket.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                data-testid="rockets-table-row"
                             >
-                                <TableCell component="th" scope="row" width={90}>
+                                <TableCell width={30}>
+                                    {favouriteIds.includes(rocket.id) ? (
+                                        <StarIconStyled onClick={() => handleClickToggleFavourite(rocket.id)}/>
+                                    ) : (
+                                        <StarBorderIconStyled onClick={() => handleClickToggleFavourite(rocket.id)}/>
+                                    )}
+                                </TableCell>
+                                <TableCell component="th" scope="row" width={90} data-testid="rockets-table-name">
                                     {rocket.name}
                                 </TableCell>
                                 <TableCell align="center" width={140}>
-                                    <PreviewImage src={rocket.flickr_images[0]} height="50px" alt="" onClick={() => handleClickImage(rocket.flickr_images[0])} />
+                                    <PreviewImage src={rocket.flickr_images[0]} height="50px" alt="" onClick={() => handleClickImage(rocket.flickr_images[0])} data-testid="rockets-table-preview-image" />
                                 </TableCell>
                                 <TableCell align="left">
-                                    {rocket.active ? <CheckCircleIcon color="success"/> : <CancelIcon color="error"/>}
+                                    {rocket.active ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
                                 </TableCell>
                                 <TableCell align="right">
-                                    <Link to={`/rockets/${rocket.id}`}>Details</Link>
+                                    <Link to={`/rockets/${rocket.id}`} data-testid="rockets-table-details-link">Details</Link>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -72,12 +94,20 @@ export function Rockets() {
                 </Table>
             </TableContainer>
             <Dialog open={!!dialogImageUrl} onClose={handleClose}>
-                <img src={dialogImageUrl} alt=""/>
+                <img src={dialogImageUrl} alt="" data-testid="rockets-dialog-image" />
             </Dialog>
         </>
     )
 }
 
 const PreviewImage = styled.img`
+    cursor: pointer;
+`
+
+const StarIconStyled = styled(StarIcon)`
+    cursor: pointer;
+`
+
+const StarBorderIconStyled = styled(StarBorderIcon)`
     cursor: pointer;
 `
