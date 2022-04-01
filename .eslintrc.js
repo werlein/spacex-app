@@ -22,7 +22,12 @@ module.exports = {
         'react',
         'react-hooks',
     ],
-    rules: {
-        "testing-library/await-async-query": 0,
-    },
+    overrides: [
+        {
+            files: ["**/cypress/**/*.spec.js", "**/cypress/**/*.spec.ts"],
+            rules: {
+                "testing-library/await-async-query": 0,
+            },
+        },
+    ],
 }
