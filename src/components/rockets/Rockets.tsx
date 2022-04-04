@@ -17,33 +17,28 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { rocketActions } from "../../redux/rocket/rocket.actions";
 import { selectRockets } from "../../redux/rocket/rocket.reducer";
 import styled from "styled-components";
+import { favouriteRocketsStorage } from "src/utils/favourite-rockets-storage/favouriteRocketsStorage";
 
 export function Rockets() {
-    const dispatch = useAppDispatch();
-    const rockets = useAppSelector(selectRockets);
-    const [dialogImageUrl, setDialogImageUrl] = useState("");
-    const [favouriteIds, setFavouriteIds] = useState<string[]>([]);
+    const dispatch = useAppDispatch()
+    const rockets = useAppSelector(selectRockets)
+    const [dialogImageUrl, setDialogImageUrl] = useState("")
+    const [favouriteIds, setFavouriteIds] = useState<string[]>(favouriteRocketsStorage.getAll())
 
     useEffect(() => {
-        dispatch(rocketActions.getRockets());
-    }, [dispatch]);
+        dispatch(rocketActions.getRockets())
+    }, [dispatch])
 
     const handleClickImage = (imageUrl: string) => {
-        setDialogImageUrl(imageUrl);
+        setDialogImageUrl(imageUrl)
     }
 
     const handleClose = () => {
-        setDialogImageUrl("");
+        setDialogImageUrl("")
     }
 
     const handleClickToggleFavourite = (rocketId: string) => {
-        const isFavourite = favouriteIds.includes(rocketId)
-
-        setFavouriteIds(() => {
-            return isFavourite ? favouriteIds.filter((id) => {
-                return id !== rocketId
-            }) : [...favouriteIds, rocketId]
-        })
+        setFavouriteIds(favouriteRocketsStorage.toggle(rocketId))
     }
 
     return (
