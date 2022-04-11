@@ -8,5 +8,6 @@ export const rocketActions = {
         return {
             payload: id
         }
-    })
+    }),
+    getFavouriteRocketIds: createAction("Rocket/getFavouriteRocketIds")
 }

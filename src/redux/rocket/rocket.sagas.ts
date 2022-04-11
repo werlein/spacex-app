@@ -1,4 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
+import { favouriteRocketsStorage } from 'src/utils/favourite-rockets-storage/favouriteRocketsStorage'
 import * as api from '../../api/rockets'
 import { rocketActions } from './rocket.actions'
 import { Rocket } from './rocket.reducer'
@@ -13,7 +14,13 @@ export function* getRocketSaga(action: ReturnType<typeof rocketActions.getRocket
     yield put(rocketActions.getRocketSuccess(rocket))
 }
 
+export function* getFavouriteRocketIdsSaga(action: ReturnType<typeof rocketActions.getFavouriteRocketIds>) {
+    const favouriteRocketIds: string[] = yield call(favouriteRocketsStorage.getAll)
+    yield put(rocketActions.getFavouriteRocketIdsSuccess(favouriteRocketIds))
+}
+
 export default function* watcher() {
     yield takeEvery(rocketActions.getRockets, getRocketsSaga)
     yield takeEvery(rocketActions.getRocket, getRocketSaga)
+    // yield takeEvery(rocketActions.getFavouriteRocketIds, getFavouriteRocketIdsSaga)
 }

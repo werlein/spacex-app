@@ -27,6 +27,7 @@ export function Rockets() {
 
     useEffect(() => {
         dispatch(rocketActions.getRockets())
+        dispatch(rocketActions.getFavouriteRocketIds())
     }, [dispatch])
 
     const handleClickImage = (imageUrl: string) => {
