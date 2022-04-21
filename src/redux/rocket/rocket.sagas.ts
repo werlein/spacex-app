@@ -15,12 +15,18 @@ export function* getRocketSaga(action: ReturnType<typeof rocketActions.getRocket
 }
 
 export function* getFavouriteRocketIdsSaga(action: ReturnType<typeof rocketActions.getFavouriteRocketIds>) {
-    const favouriteRocketIds: string[] = yield call(favouriteRocketsStorage.getAll)
-    yield put(rocketActions.getFavouriteRocketIdsSuccess(favouriteRocketIds))
+    const favouriteRocketIds: string[] = yield call(() => favouriteRocketsStorage.getAll())
+    yield put(rocketActions.setFavouriteRocketIds(favouriteRocketIds))
+}
+
+export function* toggleFavouriteRocketIdSaga(action: ReturnType<typeof rocketActions.toggleFavouriteRocketId>) {
+    const favouriteRocketIds: string[] = yield call(() => favouriteRocketsStorage.toggle(action.payload))
+    yield put(rocketActions.setFavouriteRocketIds(favouriteRocketIds))
 }
 
 export default function* watcher() {
     yield takeEvery(rocketActions.getRockets, getRocketsSaga)
     yield takeEvery(rocketActions.getRocket, getRocketSaga)
-    // yield takeEvery(rocketActions.getFavouriteRocketIds, getFavouriteRocketIdsSaga)
+    yield takeEvery(rocketActions.getFavouriteRocketIds, getFavouriteRocketIdsSaga)
+    yield takeEvery(rocketActions.toggleFavouriteRocketId, toggleFavouriteRocketIdSaga)
 }

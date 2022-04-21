@@ -30,7 +30,7 @@ export const rocketSlice = createSlice({
         getRocketSuccess: (state, action: PayloadAction<Rocket>) => {
             state.rocket = action.payload
         },
-        getFavouriteRocketIdsSuccess: (state, action: PayloadAction<string[]>) => {
+        setFavouriteRocketIds: (state, action: PayloadAction<string[]>) => {
             state.favouriteRocketIds = action.payload
         }
     }

@@ -15,15 +15,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { rocketActions } from "../../redux/rocket/rocket.actions";
-import { selectRockets } from "../../redux/rocket/rocket.reducer";
+import { selectFavouriteRocketIds, selectRockets } from "../../redux/rocket/rocket.reducer";
 import styled from "styled-components";
-import { favouriteRocketsStorage } from "src/utils/favourite-rockets-storage/favouriteRocketsStorage";
 
 export function Rockets() {
     const dispatch = useAppDispatch()
     const rockets = useAppSelector(selectRockets)
+    const favouriteIds = useAppSelector(selectFavouriteRocketIds)
     const [dialogImageUrl, setDialogImageUrl] = useState("")
-    const [favouriteIds, setFavouriteIds] = useState<string[]>(favouriteRocketsStorage.getAll())
 
     useEffect(() => {
         dispatch(rocketActions.getRockets())
@@ -39,7 +38,7 @@ export function Rockets() {
     }
 
     const handleClickToggleFavourite = (rocketId: string) => {
-        setFavouriteIds(favouriteRocketsStorage.toggle(rocketId))
+        dispatch(rocketActions.toggleFavouriteRocketId(rocketId))
     }
 
     return (
