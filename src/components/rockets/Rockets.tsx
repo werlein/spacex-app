@@ -25,16 +25,11 @@ export function Rockets() {
     const favouriteIds = useAppSelector(selectFavouriteRocketIds)
     const [dialogImageUrl, setDialogImageUrl] = useState("")
     const [filterQuery, setFilterQuery] = useState("")
-    const [filteredRockets, setFilteredRockets] = useState(rockets)
 
     useEffect(() => {
         dispatch(rocketActions.getRockets())
         dispatch(rocketActions.getFavouriteRocketIds())
     }, [dispatch])
-
-    // useEffect(() => {
-    //     filterRockets()
-    // }, [rockets])
 
     const handleClickImage = (imageUrl: string) => {
         setDialogImageUrl(imageUrl)
@@ -50,12 +45,14 @@ export function Rockets() {
 
     const handleChangeFilterInput = (e: ChangeEvent<HTMLInputElement>) => {
         setFilterQuery(e.target.value)
-        filterRockets()
     }
-
-    const filterRockets = () => {
-        setFilteredRockets(rockets.filter(rocket => rocket.name.toLowerCase().startsWith(filterQuery)))
-    }
+    
+    /**
+     * Todo
+     * - break it out
+     * - pass down the source array
+     */
+    const filteredRockets = rockets.filter(rocket => filterQuery.trim().length === 0 || rocket.name.toLowerCase().includes(filterQuery.toLowerCase()))
 
     return (
         <>
