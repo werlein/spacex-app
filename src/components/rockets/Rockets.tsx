@@ -1,5 +1,4 @@
 import Paper from "@mui/material/Paper";
-import Input from "@mui/material/Input";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,19 +11,20 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import Dialog from '@mui/material/Dialog';
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { rocketActions } from "../../redux/rocket/rocket.actions";
 import { selectFavouriteRocketIds, selectRockets } from "../../redux/rocket/rocket.reducer";
 import styled from "styled-components";
+import { Search } from "../search/Search";
 
 export function Rockets() {
     const dispatch = useAppDispatch()
     const rockets = useAppSelector(selectRockets)
     const favouriteIds = useAppSelector(selectFavouriteRocketIds)
     const [dialogImageUrl, setDialogImageUrl] = useState("")
-    const [filterQuery, setFilterQuery] = useState("")
+    const [searchResults, setSearchResults] = useState<string[]>()
 
     useEffect(() => {
         dispatch(rocketActions.getRockets())
@@ -43,23 +43,20 @@ export function Rockets() {
         dispatch(rocketActions.toggleFavouriteRocketId(rocketId))
     }
 
-    const handleChangeFilterInput = (e: ChangeEvent<HTMLInputElement>) => {
-        setFilterQuery(e.target.value)
+    const handleSearch = (results: string[]) => {
+        setSearchResults(results)
     }
-    
-    /**
-     * Todo
-     * - break it out
-     * - pass down the source array
-     */
-    const filteredRockets = rockets.filter(rocket => filterQuery.trim().length === 0 || rocket.name.toLowerCase().includes(filterQuery.toLowerCase()))
+
+    const filteredRockets = () => {
+        return rockets.filter(r => searchResults ? searchResults.includes(r.name) : true)
+    }
 
     return (
         <>
             <Typography variant="h2">
                 Rockets
             </Typography>
-            <Input placeholder="Filter by name" sx={{background: "white", paddingLeft: "5px", marginBottom: "15px"}} onChange={handleChangeFilterInput} value={filterQuery} />
+            <Search data={rockets.map(r => r.name)} onSearch={handleSearch} />
             <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -72,7 +69,7 @@ export function Rockets() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredRockets.map((rocket) => (
+                        {filteredRockets().map((rocket) => (
                             <TableRow
                                 key={rocket.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
