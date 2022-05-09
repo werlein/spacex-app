@@ -47,9 +47,7 @@ export function Rockets() {
         setSearchResults(results)
     }
 
-    const filteredRockets = () => {
-        return rockets.filter(r => searchResults ? searchResults.includes(r) : true)
-    }
+    const filteredRockets = searchResults || rockets
 
     return (
         <>
@@ -70,7 +68,7 @@ export function Rockets() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredRockets().map((rocket) => (
+                        {filteredRockets.map((rocket) => (
                             <TableRow
                                 key={rocket.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
