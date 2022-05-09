@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { rocketActions } from "../../redux/rocket/rocket.actions";
-import { selectFavouriteRocketIds, selectRockets } from "../../redux/rocket/rocket.reducer";
+import { Rocket, selectFavouriteRocketIds, selectRockets } from "../../redux/rocket/rocket.reducer";
 import styled from "styled-components";
 import { Search } from "../search/Search";
 
@@ -24,7 +24,7 @@ export function Rockets() {
     const rockets = useAppSelector(selectRockets)
     const favouriteIds = useAppSelector(selectFavouriteRocketIds)
     const [dialogImageUrl, setDialogImageUrl] = useState("")
-    const [searchResults, setSearchResults] = useState<string[]>()
+    const [searchResults, setSearchResults] = useState<Rocket[]>()
 
     useEffect(() => {
         dispatch(rocketActions.getRockets())
@@ -43,12 +43,12 @@ export function Rockets() {
         dispatch(rocketActions.toggleFavouriteRocketId(rocketId))
     }
 
-    const handleSearch = (results: string[]) => {
+    const handleSearch = (results: Rocket[]) => {
         setSearchResults(results)
     }
 
     const filteredRockets = () => {
-        return rockets.filter(r => searchResults ? searchResults.includes(r.name) : true)
+        return rockets.filter(r => searchResults ? searchResults.includes(r) : true)
     }
 
     return (
@@ -56,7 +56,7 @@ export function Rockets() {
             <Typography variant="h2">
                 Rockets
             </Typography>
-            <Search data={rockets.map(r => r.name)} onSearch={handleSearch} />
+            <Search data={rockets} keys={["country", "name"]} onSearch={handleSearch} />
             <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -65,6 +65,7 @@ export function Rockets() {
                             <TableCell>Name</TableCell>
                             <TableCell></TableCell>
                             <TableCell>Active</TableCell>
+                            <TableCell>Country</TableCell>
                             <TableCell align="right"></TableCell>
                         </TableRow>
                     </TableHead>
@@ -77,9 +78,9 @@ export function Rockets() {
                             >
                                 <TableCell width={30}>
                                     {favouriteIds.includes(rocket.id) ? (
-                                        <StarIconStyled onClick={() => handleClickToggleFavourite(rocket.id)}/>
+                                        <StarIconStyled onClick={() => handleClickToggleFavourite(rocket.id)} />
                                     ) : (
-                                        <StarBorderIconStyled onClick={() => handleClickToggleFavourite(rocket.id)}/>
+                                        <StarBorderIconStyled onClick={() => handleClickToggleFavourite(rocket.id)} />
                                     )}
                                 </TableCell>
                                 <TableCell component="th" scope="row" width={90} data-testid="rockets-table-name">
@@ -90,6 +91,9 @@ export function Rockets() {
                                 </TableCell>
                                 <TableCell align="left">
                                     {rocket.active ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
+                                </TableCell>
+                                <TableCell align="left">
+                                    {rocket.country}
                                 </TableCell>
                                 <TableCell align="right">
                                     <Link to={`/rockets/${rocket.id}`} data-testid="rockets-table-details-link">Details</Link>

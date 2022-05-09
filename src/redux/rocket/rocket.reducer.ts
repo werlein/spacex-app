@@ -5,7 +5,8 @@ export interface Rocket {
     active: boolean,
     name: string,
     id: string,
-    flickr_images: string[]
+    flickr_images: string[],
+    country: string
 }
 
 export interface RocketState {

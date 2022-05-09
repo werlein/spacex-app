@@ -18,7 +18,8 @@ test('getRocketSaga', () => {
         active: true,
         id: "dummyId",
         name: "dummy name",
-        flickr_images: []
+        flickr_images: [],
+        country: "dummyCountry"
     }
     const action = rocketActions.getRocket(rocket.id)
     testSaga(getRocketSaga, action)
