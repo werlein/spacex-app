@@ -52,6 +52,7 @@ export function Search<T extends Record<K, string>, K extends StringProps<T>>({ 
             sx={{ background: "white", paddingLeft: "5px", marginBottom: "15px", width: "300px" }}
             onChange={handleChangeFilterInput}
             value={query ?? ""}
+            autoFocus
         />
     )
 }

@@ -49,18 +49,15 @@ export function Rockets() {
         setQuery(query)
     }
 
-    const highlight = (value: string) => {
-        if (query.length > 0 && value.toLowerCase().includes(query.toLowerCase())) {
-            const reg = new RegExp(query, 'gi')
-            const highlightedStr = value.replace(reg, function (str) { return `<mark style="background: #2769AA; color: white;">${str}</mark>` })
-            return (
-                <>
-                    <span dangerouslySetInnerHTML={{ __html: highlightedStr }} />
-                </>
-            )
-        }
-
-        return value
+    const highlightText = (value: string) => {
+        if (query.trim().length === 0) {
+            return value
+          }
+    
+        const regex = new RegExp(`(${query})`, "gi")
+        const parts = value.split(regex)
+    
+        return parts.map((part, i) => regex.test(part) ? <HighlightedText key={i}>{part}</HighlightedText> : part)
     }
 
     const filteredRockets = searchResults || rockets
@@ -98,7 +95,7 @@ export function Rockets() {
                                     )}
                                 </TableCell>
                                 <TableCell component="th" scope="row" width={90} data-testid="rockets-table-name">
-                                    {highlight(rocket.name)}
+                                    {highlightText(rocket.name)}
                                 </TableCell>
                                 <TableCell align="center" width={140}>
                                     <PreviewImage src={rocket.flickr_images[0]} height="50px" alt="" onClick={() => handleClickImage(rocket.flickr_images[0])} data-testid="rockets-table-preview-image" />
@@ -107,7 +104,7 @@ export function Rockets() {
                                     {rocket.active ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {highlight(rocket.country)}
+                                    {highlightText(rocket.country)}
                                 </TableCell>
                                 <TableCell align="right">
                                     <Link to={`/rockets/${rocket.id}`} data-testid="rockets-table-details-link">Details</Link>
@@ -136,3 +133,6 @@ const StarBorderIconStyled = styled(StarBorderIcon)`
     cursor: pointer;
 `
 
+const HighlightedText = styled.span`
+    background-color: orange;
+`
