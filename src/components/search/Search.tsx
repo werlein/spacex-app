@@ -4,10 +4,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 interface Props<T, K> {
     data: T[],
     keys: K[],
-    onSearch: (results: T[]) => void
+    onSearch: (results: T[], query: string) => void
 }
-
-// ToDo: fix the Placeholder in the input field
 
 type StringProps<T> = { [K in keyof T]: T[K] extends string ? K : never }[keyof T];
 
@@ -17,7 +15,7 @@ export function Search<T extends Record<K, string>, K extends StringProps<T>>({ 
     useEffect(() => {
         if (query !== undefined) {
             if (query?.trim().length === 0) {
-                onSearch(data)
+                onSearch(data, query)
                 return
             }
 
@@ -36,7 +34,7 @@ export function Search<T extends Record<K, string>, K extends StringProps<T>>({ 
                 }
             }
 
-            onSearch(results)
+            onSearch(results, query)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query])
@@ -46,10 +44,12 @@ export function Search<T extends Record<K, string>, K extends StringProps<T>>({ 
         setQuery(e.target.value)
     }
 
+    const placeholder = `Filter by ${keys.join(', ')}`
+
     return (
         <Input
-            placeholder="Filter by name or country"
-            sx={{ background: "white", paddingLeft: "5px", marginBottom: "15px" }}
+            placeholder={placeholder}
+            sx={{ background: "white", paddingLeft: "5px", marginBottom: "15px", width: "300px" }}
             onChange={handleChangeFilterInput}
             value={query ?? ""}
         />

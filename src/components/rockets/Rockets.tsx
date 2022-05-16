@@ -25,6 +25,7 @@ export function Rockets() {
     const favouriteIds = useAppSelector(selectFavouriteRocketIds)
     const [dialogImageUrl, setDialogImageUrl] = useState("")
     const [searchResults, setSearchResults] = useState<Rocket[]>()
+    const [query, setQuery] = useState("")
 
     useEffect(() => {
         dispatch(rocketActions.getRockets())
@@ -43,8 +44,23 @@ export function Rockets() {
         dispatch(rocketActions.toggleFavouriteRocketId(rocketId))
     }
 
-    const handleSearch = (results: Rocket[]) => {
+    const handleSearch = (results: Rocket[], query: string) => {
         setSearchResults(results)
+        setQuery(query)
+    }
+
+    const highlight = (value: string) => {
+        if (query.length > 0 && value.toLowerCase().includes(query.toLowerCase())) {
+            const reg = new RegExp(query, 'gi')
+            const highlightedStr = value.replace(reg, function (str) { return `<mark style="background: #2769AA; color: white;">${str}</mark>` })
+            return (
+                <>
+                    <span dangerouslySetInnerHTML={{ __html: highlightedStr }} />
+                </>
+            )
+        }
+
+        return value
     }
 
     const filteredRockets = searchResults || rockets
@@ -82,7 +98,7 @@ export function Rockets() {
                                     )}
                                 </TableCell>
                                 <TableCell component="th" scope="row" width={90} data-testid="rockets-table-name">
-                                    {rocket.name}
+                                    {highlight(rocket.name)}
                                 </TableCell>
                                 <TableCell align="center" width={140}>
                                     <PreviewImage src={rocket.flickr_images[0]} height="50px" alt="" onClick={() => handleClickImage(rocket.flickr_images[0])} data-testid="rockets-table-preview-image" />
@@ -91,7 +107,7 @@ export function Rockets() {
                                     {rocket.active ? <CheckCircleIcon color="success" /> : <CancelIcon color="error" />}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {rocket.country}
+                                    {highlight(rocket.country)}
                                 </TableCell>
                                 <TableCell align="right">
                                     <Link to={`/rockets/${rocket.id}`} data-testid="rockets-table-details-link">Details</Link>
@@ -119,3 +135,4 @@ const StarIconStyled = styled(StarIcon)`
 const StarBorderIconStyled = styled(StarBorderIcon)`
     cursor: pointer;
 `
+
